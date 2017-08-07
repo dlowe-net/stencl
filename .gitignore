@@ -1,0 +1,6 @@
+*.fasl
+*.dfsl
+*.ppcf
+*.x86f
+*.fas
+*.lib
