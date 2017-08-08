@@ -98,3 +98,12 @@ the html which the html template is supposed to produce."
                        :if-exists :supersede
                        :if-does-not-exist :create)
     (apply 'to-stream ouf template args)))
+
+(defun format-template (stream template &rest args)
+  (cond
+    ((null stream)
+     (apply 'to-string (from-string template) args))
+    ((eq stream t)
+     (apply 'to-stream *standard-output* (from-string template) args))
+    (t
+     (apply 'to-stream stream (from-string template) args))))

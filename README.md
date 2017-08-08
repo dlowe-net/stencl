@@ -98,6 +98,12 @@ Like `TO-STREAM`, but outputs to a file, which is created if necessary.
 
 Like `TO-STREAM`, but outputs to a string.
 
+* `FORMAT-TEMPLATE` *stream* *template* `&rest` *keyword args*
+
+Generates a stencl function from *template*, calls it with *keyword
+args*, and outputs it to *stream* if not `NIL`.  Outputs to
+*standard-output* if *stream* is `T`.  Returns the string generated.
+
 * `OUT` *arguments**
 
 Usually called within a template, the stencl function converts all its
