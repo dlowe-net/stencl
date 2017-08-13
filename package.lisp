@@ -8,4 +8,6 @@
            #:to-stream
            #:to-string
            #:to-file
-           #:format-template))
+           #:format-template
+           #:include
+           #:out))
