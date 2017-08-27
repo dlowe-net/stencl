@@ -31,3 +31,14 @@
              (to-string (from-string "[(stencl:include stencl.test::aux-template)] -- [#{author}]")
                         :quote "That which is to give light must endure burning."
                         :author "Viktor Frankl"))))
+
+(deftest collection ()
+  (is (equal '("Testing" (:foo "bar" :bar "baz"))
+             (multiple-value-list
+              (format-template nil "Testing[(stencl:collect :foo \"bar\") (stencl:collect :bar \"baz\")]")))))
+
+(deftest collect-with-include ()
+  (setf aux-template (from-string "-*[(stencl:collect :foo \"bar\")]*-"))
+  (is (equal '("Testing -**-" (:foo "bar"))
+             (multiple-value-list
+              (format-template nil "Testing [(stencl:include aux-template)]")))))

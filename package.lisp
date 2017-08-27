@@ -9,5 +9,6 @@
            #:to-string
            #:to-file
            #:format-template
+           #:collect
            #:include
            #:out))

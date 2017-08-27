@@ -88,21 +88,24 @@ Generates a stencl function from a string.
 * `TO-STREAM` *stream* *template* `&rest` *keyword args*
 
 Outputs the result of *template* to the *stream*, with the given
-*keyword args*.
+*keyword args*.  Returns the collected results of the template.
 
 * `TO-FILE` *output pathname* *template* `&rest` *keyword args*
 
-Like `TO-STREAM`, but outputs to a file, which is created if necessary.
+Like `TO-STREAM`, but outputs to a file, which is created if
+necessary.  Returns the collected results of the template.
 
 * `TO-STRING` *template* `&rest` *keyword args*
 
-Like `TO-STREAM`, but outputs to a string.
+Like `TO-STREAM`, but outputs to a string.  The collected results of
+the template are returned as the second value.
 
 * `FORMAT-TEMPLATE` *stream* *template* `&rest` *keyword args*
 
 Generates a stencl function from *template*, calls it with *keyword
 args*, and outputs it to *stream* if not `NIL`.  Outputs to
-*standard-output* if *stream* is `T`.  Returns the string generated.
+*standard-output* if *stream* is `T`.  Returns the string generated
+and the collected results of the template.
 
 * `OUT` *arguments**
 
@@ -118,3 +121,11 @@ may be useful for providing nested templates for layout or other
 shared structures.  The template argument is just another variable
 which is evaluated at runtime.
 
+* `COLLECT` *values*
+
+In a template definition, this form collects values into a list, which
+are returned as the result of the template function.  This is useful
+for passing information calculated in the template back to the caller.
+Returned results from included templates are also appended to the
+result.  `COLLECT` is most useful when collecting property lists
+(*e.g.* `(:foo "bar" :baz 23)`), but any value can be returned.

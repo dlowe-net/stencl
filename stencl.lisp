@@ -52,21 +52,29 @@ into a stencl expression"
   "Returns a lambda expression to be compiled into a function."
   (multiple-value-bind (template-code params)
       (%parse-template stream)
-    (let ((output (gensym)))
+    (let ((output (gensym))
+          (result (gensym)))
       `(lambda (,output &rest other-params &key ,@params &allow-other-keys)
          (declare (ignorable other-params))
-         (let ((*standard-output* ,output))
-           (macrolet ((out (&rest objects)
-                        `(progn
-                           ,@(mapcar
-                              (lambda (o)
-                                `(princ-not-nil ,o))
-                              objects)
-                           nil))
-                      (include (v &rest local-params)
-                        `(apply ,v ,',output (append other-params (list ,@local-params)))))
-             (out ,@template-code)
-             nil))))))
+         (let ((*standard-output* ,output)
+               (,result nil))
+           (flet ((collect (&rest local-results)
+                    (setf ,result (append ,result local-results))
+                    nil))
+             (macrolet ((out (&rest objects)
+                          `(progn
+                             ,@(mapcar
+                                (lambda (o)
+                                  `(princ-not-nil ,o))
+                                objects)
+                             nil))
+                        (include (v &rest local-params)
+                          `(apply #'collect
+                                  (apply ,v ,',output (append other-params
+                                                              (list
+                                                               ,@local-params))))))
+               (out ,@template-code)
+               ,result)))))))
 
 (defun from-stream (stream)
   "Returns a compiled function which outputs to the given stream
@@ -89,8 +97,11 @@ the html which the html template is supposed to produce."
   (apply template stream args))
 
 (defun to-string (template &rest args)
-  (with-output-to-string (s)
-    (apply 'to-stream s template args)))
+  (let (result)
+    (values
+     (with-output-to-string (s)
+       (setf result (apply 'to-stream s template args)))
+     result)))
 
 (defun to-file (path template &rest args)
   (with-open-file (ouf path
