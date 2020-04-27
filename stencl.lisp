@@ -35,7 +35,7 @@ into a stencl expression"
       (set-dispatch-macro-character #\# #\{
                                     (lambda (stream char num)
                                       (let ((sym (parse-param-brace stream char num)))
-                                        (push sym params)
+                                        (pushnew sym params)
                                         sym)))
       (loop with first-elt = (parse-template-bracket stream #\])
          for elt = (read stream nil nil)

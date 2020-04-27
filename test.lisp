@@ -23,6 +23,12 @@
                   :solute "vinegar"
                   :solution "a foamy volcano"))))
 
+(deftest repeated-implicit-param ()
+  (is (equal "It was the best of times, it was the worst of times."
+       (to-string (from-string
+                   "It was the best of [#{things}], it was the worst of [#{things}].")
+                  :things "times"))))
+
 
 (defparameter aux-template nil)
 (deftest include-with-implict-param ()
