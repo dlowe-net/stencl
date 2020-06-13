@@ -61,6 +61,7 @@ into a stencl expression"
            (flet ((collect (&rest local-results)
                     (setf ,result (append ,result local-results))
                     nil))
+             (declare (ignorable #'collect))
              (macrolet ((out (&rest objects)
                           `(progn
                              ,@(mapcar
